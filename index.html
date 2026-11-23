@@ -1,0 +1,983 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Worksheet Evaluasi & Likuidasi SC (Minggu Ke-4) - SMP Pembangunan Jaya</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Font Awesome untuk Ikon Edukatif -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Chart.js untuk Grafik Ringkas Keuangan -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        navy: {
+                            DEFAULT: '#1B365D',
+                            dark: '#12243F',
+                            light: '#2A4E82'
+                        },
+                        teal: {
+                            DEFAULT: '#0D9488',
+                            dark: '#0F766E',
+                            light: '#14B8A6'
+                        },
+                        amberwarm: {
+                            DEFAULT: '#F59E0B',
+                            light: '#FEF3C7'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f1f5f9;
+            color: #1e293b;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+
+        /* Print Media Query untuk Cetak 1 Lembar A4 Rapi */
+        @media print {
+            @page {
+                size: A4 portrait;
+                margin: 10mm 12mm;
+            }
+            body {
+                background-color: #ffffff !important;
+                color: #0f172a !important;
+                font-size: 9pt !important;
+                line-height: 1.3 !important;
+                padding: 0 !important;
+                margin: 0 !important;
+            }
+            .no-print {
+                display: none !important;
+            }
+            .print-only {
+                display: block !important;
+            }
+            .main-container {
+                max-width: 100% !important;
+                padding: 0 !important;
+                margin: 0 !important;
+                box-shadow: none !important;
+            }
+            .card-section {
+                box-shadow: none !important;
+                border: 1px solid #cbd5e1 !important;
+                border-radius: 6px !important;
+                padding: 8px 10px !important;
+                margin-bottom: 8px !important;
+                break-inside: avoid;
+                page-break-inside: avoid;
+            }
+            .header-banner {
+                background-color: #1B365D !important;
+                color: #ffffff !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+                padding: 10px 14px !important;
+                margin-bottom: 8px !important;
+            }
+            input, select, textarea {
+                border: none !important;
+                border-bottom: 1px solid #94a3b8 !important;
+                background: transparent !important;
+                padding: 1px 2px !important;
+                font-size: 8.5pt !important;
+                color: #000000 !important;
+                resize: none !important;
+            }
+            textarea {
+                border: 1px solid #cbd5e1 !important;
+                min-height: 36px !important;
+            }
+            .chart-wrapper {
+                height: 110px !important;
+            }
+            .print-signature {
+                display: flex !important;
+                justify-content: space-around;
+                margin-top: 8px;
+                padding-top: 6px;
+                border-top: 1px dashed #94a3b8;
+                font-size: 8.5pt;
+            }
+        }
+    </style>
+</head>
+<body class="antialiased pb-20 md:pb-12">
+
+    <!-- Notifikasi Toast (Pengganti alert()) -->
+    <div id="toast" class="no-print fixed bottom-5 right-5 z-50 transform translate-y-24 opacity-0 transition-all duration-300 pointer-events-none">
+        <div class="bg-navy text-white px-4 py-3 rounded-xl shadow-lg flex items-center gap-3 border border-teal/40">
+            <i id="toast-icon" class="fa-solid fa-circle-check text-teal-light text-lg"></i>
+            <div>
+                <p id="toast-title" class="font-semibold text-sm">Berhasil!</p>
+                <p id="toast-msg" class="text-xs text-slate-200">Data tersimpan otomatis.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Konfirmasi Reset -->
+    <div id="reset-modal" class="no-print fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
+        <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl border border-slate-200">
+            <div class="flex items-center gap-3 text-amber-600 mb-3">
+                <div class="w-10 h-10 rounded-full bg-amber-100 flex items-center justify-center">
+                    <i class="fa-solid fa-triangle-exclamation text-lg"></i>
+                </div>
+                <h3 class="text-lg font-bold text-slate-800">Hapus & Reset Isian?</h3>
+            </div>
+            <p class="text-sm text-slate-600 mb-5">Semua angka perhitungan, pilihan likuidasi, dan jawaban refleksi yang telah kamu isi akan dihapus dan dikembalikan ke awal. Lanjutkan?</p>
+            <div class="flex justify-end gap-2">
+                <button type="button" onclick="closeResetModal()" class="px-4 py-2 rounded-lg text-sm font-medium text-slate-600 hover:bg-slate-100 transition">Batal</button>
+                <button type="button" onclick="confirmReset()" class="px-4 py-2 rounded-lg text-sm font-semibold bg-rose-600 text-white hover:bg-rose-700 transition">Ya, Reset Semua</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Top Action Bar (Sticky) -->
+    <nav class="no-print sticky top-0 z-40 bg-white/95 backdrop-blur border-b border-slate-200 shadow-sm">
+        <div class="max-w-5xl mx-auto px-4 py-2.5 flex flex-wrap items-center justify-between gap-2">
+            <div class="flex items-center gap-2">
+                <span class="bg-navy text-white text-xs font-bold px-2.5 py-1 rounded-md">SC • TAHAP 4</span>
+                <span id="save-status" class="text-xs text-slate-500 flex items-center gap-1.5">
+                    <i class="fa-solid fa-cloud-check text-teal"></i> Tersimpan otomatis
+                </span>
+            </div>
+            <div class="flex flex-wrap items-center gap-2">
+                <button type="button" onclick="saveDraftManual()" class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-100 text-slate-700 hover:bg-slate-200 transition flex items-center gap-1.5">
+                    <i class="fa-solid fa-floppy-disk text-navy"></i> Simpan Draft
+                </button>
+                <button type="button" onclick="copySummaryToClipboard()" class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-teal/10 text-teal-dark hover:bg-teal/20 transition flex items-center gap-1.5">
+                    <i class="fa-solid fa-copy"></i> Salin Laporan
+                </button>
+                <button type="button" onclick="downloadTxtReport()" class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-amber-100 text-amber-800 hover:bg-amber-200 transition flex items-center gap-1.5">
+                    <i class="fa-solid fa-file-lines"></i> Unduh .TXT
+                </button>
+                <button type="button" onclick="window.print()" class="px-3.5 py-1.5 rounded-lg text-xs font-bold bg-navy text-white hover:bg-navy-light shadow-sm transition flex items-center gap-1.5">
+                    <i class="fa-solid fa-print"></i> Cetak / Simpan PDF
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Worksheet Container -->
+    <main class="main-container max-w-5xl mx-auto px-4 pt-6 space-y-6">
+
+        <!-- 1. HEADER & IDENTITAS MURID INTERAKTIF -->
+        <header class="header-banner bg-gradient-to-r from-navy to-navy-light text-white rounded-2xl p-6 shadow-md relative overflow-hidden">
+            <div class="relative z-10 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                <div>
+                    <div class="inline-flex items-center gap-2 bg-white/15 backdrop-blur-sm px-3 py-1 rounded-full text-xs font-semibold text-teal-200 mb-2">
+                        <i class="fa-solid fa-building-columns"></i> SMP PEMBANGUNAN JAYA • TA 2026/2027
+                    </div>
+                    <h1 class="text-xl md:text-2xl font-extrabold tracking-tight leading-snug">
+                        WORKSHEET EVALUASI &amp; LIKUIDASI STUDENT COMPANY
+                    </h1>
+                    <p class="text-sm text-slate-200 mt-1">
+                        Minggu Ke-4 (Tahap Penutupan Usaha) — Integrasi Mata Pelajaran IPS &amp; Matematika
+                    </p>
+                </div>
+                <div class="bg-teal px-4 py-2.5 rounded-xl text-center shrink-0 shadow-inner border border-teal-light/40">
+                    <div class="text-[11px] uppercase tracking-wider font-semibold text-teal-100">Periode Laporan</div>
+                    <div class="text-base font-extrabold text-white">MINGGU KE-4</div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Form Identitas Murid -->
+        <section class="card-section bg-white rounded-2xl p-5 shadow-sm border border-slate-200">
+            <div class="flex items-center justify-between mb-4 border-b border-slate-100 pb-2.5">
+                <h2 class="text-sm font-bold uppercase tracking-wider text-navy flex items-center gap-2">
+                    <i class="fa-solid fa-id-card text-teal"></i> Identitas Murid &amp; Struktur Organisasi SC
+                </h2>
+                <button type="button" onclick="openResetModal()" class="no-print text-xs text-rose-600 hover:text-rose-700 font-medium flex items-center gap-1">
+                    <i class="fa-solid fa-rotate-left"></i> Reset Form
+                </button>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+                <!-- Nama Murid -->
+                <div class="lg:col-span-2">
+                    <label for="namaMurid" class="block text-xs font-semibold text-slate-600 mb-1">Nama Lengkap Murid <span class="text-rose-500">*</span></label>
+                    <input type="text" id="namaMurid" placeholder="Contoh: Raka Aditya Pratama" class="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-teal focus:border-teal transition">
+                </div>
+
+                <!-- Kelas Dropdown -->
+                <div>
+                    <label for="kelasMurid" class="block text-xs font-semibold text-slate-600 mb-1">Kelas <span class="text-rose-500">*</span></label>
+                    <select id="kelasMurid" class="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 bg-white focus:outline-none focus:ring-2 focus:ring-teal focus:border-teal transition">
+                        <option value="">-- Pilih Kelas --</option>
+                        <option value="8A">Kelas 8A</option>
+                        <option value="8B">Kelas 8B</option>
+                        <option value="8C">Kelas 8C</option>
+                        <option value="8D">Kelas 8D</option>
+                    </select>
+                </div>
+
+                <!-- Nama Perusahaan SC -->
+                <div class="lg:col-span-2">
+                    <label for="namaPerusahaan" class="block text-xs font-semibold text-slate-600 mb-1">Nama Perusahaan SC <span class="text-rose-500">*</span></label>
+                    <input type="text" id="namaPerusahaan" placeholder="Contoh: PT Jaya Kreasi Nusantara SC" class="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-teal focus:border-teal transition">
+                </div>
+
+                <!-- Peran / Divisi sesuai Struktur SC -->
+                <div class="lg:col-span-3">
+                    <label for="peranDivisi" class="block text-xs font-semibold text-slate-600 mb-1">Peran / Jabatan dalam Struktur SC <span class="text-rose-500">*</span></label>
+                    <select id="peranDivisi" class="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 bg-white focus:outline-none focus:ring-2 focus:ring-teal focus:border-teal transition">
+                        <option value="">-- Pilih Jabatan / Divisi sesuai Struktur SC --</option>
+                        <optgroup label="Top Management">
+                            <option value="President Director">President Director</option>
+                            <option value="Secretary of Director">Secretary of Director</option>
+                        </optgroup>
+                        <optgroup label="Divisi Finance (Keuangan)">
+                            <option value="VP of Finance">VP of Finance</option>
+                            <option value="Manager & Staff Keuangan">Manager &amp; Staff Keuangan</option>
+                            <option value="Manager & Staff Purchasing">Manager &amp; Staff Purchasing</option>
+                        </optgroup>
+                        <optgroup label="Divisi Production (Produksi)">
+                            <option value="VP of Production">VP of Production</option>
+                            <option value="Manager & Staff Produksi">Manager &amp; Staff Produksi</option>
+                            <option value="Quality Control (QC)">Quality Control (QC)</option>
+                            <option value="Research & Development (R&D)">Research &amp; Development (R&amp;D)</option>
+                        </optgroup>
+                        <optgroup label="Divisi Marketing (Pemasaran)">
+                            <option value="VP of Marketing">VP of Marketing</option>
+                            <option value="Manager & Staff Pemasaran (Marketing Strategic)">Manager &amp; Staff Pemasaran (Marketing Strategic)</option>
+                            <option value="IT dan Design">IT dan Design</option>
+                            <option value="Penjualan (Business Development)">Penjualan (Business Development)</option>
+                        </optgroup>
+                        <optgroup label="Divisi Human Resources (HR)">
+                            <option value="VP of HR">VP of HR</option>
+                            <option value="Manager & Staff HR Admin / HR Operations">Manager &amp; Staff HR Admin / HR Operations</option>
+                            <option value="Training & Development (L&D)">Training &amp; Development (L&amp;D)</option>
+                            <option value="Payroll">Payroll</option>
+                        </optgroup>
+                        <optgroup label="Divisi Public Relations (PR)">
+                            <option value="VP of PR">VP of PR</option>
+                            <option value="Manager & Staff Media Sosial & Konten Digital (Digital PR)">Manager &amp; Staff Media Sosial &amp; Konten Digital (Digital PR)</option>
+                            <option value="Event & Publication CSR">Event &amp; Publication CSR</option>
+                        </optgroup>
+                    </select>
+                </div>
+
+                <!-- Tanggal Evaluasi -->
+                <div class="lg:col-span-2">
+                    <label for="tanggalEvaluasi" class="block text-xs font-semibold text-slate-600 mb-1">Tanggal Evaluasi</label>
+                    <input type="date" id="tanggalEvaluasi" class="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-teal focus:border-teal transition">
+                </div>
+            </div>
+        </section>
+
+        <!-- 2. MODUL 1: KALKULATOR LAPORAN AKHIR KEUANGAN & LABA/RUGI (MATEMATIKA) -->
+        <section class="card-section bg-white rounded-2xl p-5 shadow-sm border border-slate-200">
+            <div class="flex flex-wrap items-center justify-between gap-2 mb-4 border-b border-slate-100 pb-2.5">
+                <h2 class="text-sm font-bold uppercase tracking-wider text-navy flex items-center gap-2">
+                    <span class="w-6 h-6 rounded-md bg-navy text-white text-xs flex items-center justify-center font-bold">1</span>
+                    Kalkulator Laporan Akhir Keuangan &amp; Likuidasi (Matematika)
+                </h2>
+                <span class="text-xs bg-blue-50 text-navy font-medium px-2.5 py-1 rounded-md border border-blue-200">
+                    Buku Kerja Hal. 12 • Laba/Rugi &amp; Pembagian Saham
+                </span>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                <!-- Kolom Kiri: Input Angka Keuangan -->
+                <div class="lg:col-span-6 space-y-3.5">
+                    <p class="text-xs text-slate-500 bg-slate-50 p-2.5 rounded-lg border border-slate-200">
+                        <i class="fa-solid fa-circle-info text-teal mr-1"></i> Masukkan data keuangan kumulatif dari <strong>Minggu Ke-1 hingga Minggu Ke-4</strong> sesuai catatan bagian Finance.
+                    </p>
+
+                    <!-- Modal Awal -->
+                    <div>
+                        <label for="modalAwal" class="block text-xs font-semibold text-slate-700 mb-1">1. Modal Awal Usaha (Total Saham Terkumpul)</label>
+                        <div class="relative">
+                            <span class="absolute left-3 top-2 text-sm font-semibold text-slate-400">Rp</span>
+                            <input type="text" inputmode="numeric" id="modalAwal" data-currency="true" placeholder="0" class="w-full pl-9 pr-3 py-2 text-sm font-semibold text-slate-800 rounded-lg border border-slate-300 focus:ring-2 focus:ring-teal focus:border-teal">
+                        </div>
+                    </div>
+
+                    <!-- Total Pendapatan -->
+                    <div>
+                        <label for="totalPendapatan" class="block text-xs font-semibold text-slate-700 mb-1">2. Total Pendapatan Penjualan Kumulatif (M1–M4)</label>
+                        <div class="relative">
+                            <span class="absolute left-3 top-2 text-sm font-semibold text-slate-400">Rp</span>
+                            <input type="text" inputmode="numeric" id="totalPendapatan" data-currency="true" placeholder="0" class="w-full pl-9 pr-3 py-2 text-sm font-semibold text-emerald-700 rounded-lg border border-slate-300 focus:ring-2 focus:ring-teal focus:border-teal">
+                        </div>
+                    </div>
+
+                    <!-- Total Biaya -->
+                    <div>
+                        <label for="totalBiaya" class="block text-xs font-semibold text-slate-700 mb-1">3. Total Biaya Produksi &amp; Operasional Kumulatif (M1–M4)</label>
+                        <div class="relative">
+                            <span class="absolute left-3 top-2 text-sm font-semibold text-slate-400">Rp</span>
+                            <input type="text" inputmode="numeric" id="totalBiaya" data-currency="true" placeholder="0" class="w-full pl-9 pr-3 py-2 text-sm font-semibold text-rose-700 rounded-lg border border-slate-300 focus:ring-2 focus:ring-teal focus:border-teal">
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <!-- Total Utang -->
+                        <div>
+                            <label for="totalUtang" class="block text-xs font-semibold text-slate-700 mb-1">4. Utang Belum Dibayar (Jika ada)</label>
+                            <div class="relative">
+                                <span class="absolute left-3 top-2 text-sm font-semibold text-slate-400">Rp</span>
+                                <input type="text" inputmode="numeric" id="totalUtang" data-currency="true" placeholder="0" class="w-full pl-9 pr-3 py-2 text-sm font-semibold text-slate-800 rounded-lg border border-slate-300 focus:ring-2 focus:ring-teal focus:border-teal">
+                            </div>
+                        </div>
+
+                        <!-- Jumlah Pemegang Saham / Anggota -->
+                        <div>
+                            <label for="jumlahAnggota" class="block text-xs font-semibold text-slate-700 mb-1">5. Jumlah Pemegang Saham/Anggota</label>
+                            <div class="relative">
+                                <input type="number" min="1" id="jumlahAnggota" value="10" placeholder="10" class="w-full pl-3 pr-14 py-2 text-sm font-semibold text-slate-800 rounded-lg border border-slate-300 focus:ring-2 focus:ring-teal focus:border-teal">
+                                <span class="absolute right-3 top-2 text-xs font-medium text-slate-400">orang</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Kolom Kanan: Hasil Kalkulasi Real-Time & Grafik -->
+                <div class="lg:col-span-6 flex flex-col justify-between bg-slate-50 rounded-xl p-4 border border-slate-200 space-y-4">
+                    <div>
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="text-xs font-bold uppercase tracking-wider text-slate-500">Hasil Perhitungan Otomatis</span>
+                            <span id="statusBadge" class="px-2.5 py-0.5 rounded-full text-xs font-extrabold bg-slate-200 text-slate-700">
+                                IMPAS (Rp 0)
+                            </span>
+                        </div>
+
+                        <!-- Grid Kartu Hasil -->
+                        <div class="grid grid-cols-2 gap-2.5">
+                            <!-- Laba / Rugi Bersih -->
+                            <div class="bg-white p-3 rounded-lg border border-slate-200 shadow-xs">
+                                <div class="text-[11px] text-slate-500 font-medium">Laba / Rugi Bersih</div>
+                                <div id="hasilLabaRugi" class="text-base md:text-lg font-extrabold text-slate-800 mt-0.5">Rp 0</div>
+                                <div class="text-[10px] text-slate-400 mt-0.5">Pendapatan − Biaya</div>
+                            </div>
+
+                            <!-- Margin Laba / Rugi -->
+                            <div class="bg-white p-3 rounded-lg border border-slate-200 shadow-xs">
+                                <div class="text-[11px] text-slate-500 font-medium">Persentase Margin</div>
+                                <div id="hasilMargin" class="text-base md:text-lg font-extrabold text-navy mt-0.5">0%</div>
+                                <div class="text-[10px] text-slate-400 mt-0.5">(Laba/Rugi ÷ Pendapatan)</div>
+                            </div>
+
+                            <!-- Dana Bersih Likuidasi -->
+                            <div class="bg-white p-3 rounded-lg border border-teal/30 shadow-xs">
+                                <div class="text-[11px] text-teal-dark font-semibold">Dana Bersih Likuidasi</div>
+                                <div id="hasilDanaLikuidasi" class="text-base md:text-lg font-extrabold text-teal-dark mt-0.5">Rp 0</div>
+                                <div class="text-[10px] text-slate-400 mt-0.5">Modal + Laba/Rugi − Utang</div>
+                            </div>
+
+                            <!-- Estimasi per Anggota / Saham -->
+                            <div class="bg-navy text-white p-3 rounded-lg shadow-xs">
+                                <div class="text-[11px] text-teal-200 font-medium">Pengembalian / Anggota</div>
+                                <div id="hasilPerAnggota" class="text-base md:text-lg font-extrabold text-white mt-0.5">Rp 0</div>
+                                <div class="text-[10px] text-slate-300 mt-0.5">Modal + Dividen per orang</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Grafik Perbandingan Keuangan -->
+                    <div class="bg-white p-3 rounded-lg border border-slate-200">
+                        <div class="text-[11px] font-semibold text-slate-600 mb-1 flex items-center justify-between">
+                            <span>Visualisasi Keuangan (Pendapatan vs Biaya vs Laba/Rugi)</span>
+                        </div>
+                        <div class="chart-wrapper relative h-36 w-full">
+                            <canvas id="financeChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. MODUL 2: SIMULASI & CHECKLIST PENYELESAIAN LIKUIDASI USAHA (IPS - TAHAP 4) -->
+        <section class="card-section bg-white rounded-2xl p-5 shadow-sm border border-slate-200">
+            <div class="flex flex-wrap items-center justify-between gap-2 mb-3 border-b border-slate-100 pb-2.5">
+                <h2 class="text-sm font-bold uppercase tracking-wider text-navy flex items-center gap-2">
+                    <span class="w-6 h-6 rounded-md bg-teal text-white text-xs flex items-center justify-center font-bold">2</span>
+                    Checklist &amp; Strategi Penyelesaian Likuidasi Usaha (Integrasi IPS)
+                </h2>
+                <span class="text-xs bg-teal/10 text-teal-dark font-medium px-2.5 py-1 rounded-md border border-teal/20">
+                    Tahap 4 • Menutup Usaha dengan Tanggung Jawab
+                </span>
+            </div>
+
+            <!-- Kotak Konsep Ekonomi IPS -->
+            <div class="bg-amberwarm-light/60 border border-amber-200 rounded-xl p-3.5 mb-4 text-xs text-slate-700 leading-relaxed">
+                <div class="font-bold text-amber-900 mb-1 flex items-center gap-1.5">
+                    <i class="fa-solid fa-lightbulb text-amber-500"></i> Pengingat Konsep Ekonomi (IPS):
+                </div>
+                <p>
+                    <strong>Modal</strong> adalah dana awal yang digunakan untuk menjalankan usaha. Saat Student Company ditutup, perusahaan wajib melakukan <strong>Likuidasi</strong>—yaitu menyelesaikan seluruh <em>barang/bahan tersisa</em>, melunasi <em>utang</em>, dan mengembalikan <em>modal pemilik saham</em> secara transparan. Ingat: <strong>Uang kas yang ada di tangan tidak otomatis sama dengan laba</strong> sebelum dikurangi modal awal dan kewajiban!
+                </p>
+            </div>
+
+            <!-- Tabel / Kartu Interaktif 3 Aspek Likuidasi -->
+            <div class="space-y-3">
+                <!-- Aspek 1: Barang & Bahan Tersisa -->
+                <div class="p-3.5 rounded-xl border border-slate-200 bg-slate-50/70 hover:border-teal/50 transition">
+                    <div class="flex flex-col md:flex-row md:items-center justify-between gap-2 mb-2">
+                        <label class="flex items-center gap-2.5 cursor-pointer font-bold text-sm text-navy">
+                            <input type="checkbox" id="chkBarang" class="w-4 h-4 accent-teal rounded cursor-pointer">
+                            <span>1. Penyelesaian Barang Jadi &amp; Bahan Baku Tersisa</span>
+                        </label>
+                        <select id="opsiBarang" class="px-3 py-1.5 text-xs font-medium rounded-lg border border-slate-300 bg-white focus:ring-2 focus:ring-teal">
+                            <option value="Habis Terjual Semua (0 Sisa)">Status: Habis Terjual Semua (0 Sisa)</option>
+                            <option value="Dijual Diskon / Obral Akhir">Tindakan: Dijual Diskon / Obral Akhir</option>
+                            <option value="Dibagikan Merata ke Anggota SC">Tindakan: Dibagikan Merata ke Anggota SC</option>
+                            <option value="Bahan Sisa Diolah / Dihibahkan">Tindakan: Bahan Sisa Diolah / Dihibahkan</option>
+                        </select>
+                    </div>
+                    <input type="text" id="ketBarang" placeholder="Jelaskan detail penyelesaiannya (misal: Sisa 4 pcs dijual diskon 30% saat jam istirahat)..." class="w-full px-3 py-1.5 text-xs rounded-lg border border-slate-300 bg-white focus:outline-none focus:ring-2 focus:ring-teal">
+                </div>
+
+                <!-- Aspek 2: Utang & Kewajiban Pihak Lain -->
+                <div class="p-3.5 rounded-xl border border-slate-200 bg-slate-50/70 hover:border-teal/50 transition">
+                    <div class="flex flex-col md:flex-row md:items-center justify-between gap-2 mb-2">
+                        <label class="flex items-center gap-2.5 cursor-pointer font-bold text-sm text-navy">
+                            <input type="checkbox" id="chkUtang" class="w-4 h-4 accent-teal rounded cursor-pointer">
+                            <span>2. Pelunasan Utang &amp; Kewajiban kepada Pemasok / Sekolah</span>
+                        </label>
+                        <select id="opsiUtang" class="px-3 py-1.5 text-xs font-medium rounded-lg border border-slate-300 bg-white focus:ring-2 focus:ring-teal">
+                            <option value="Tidak Memiliki Utang Usaha">Status: Tidak Memiliki Utang Usaha</option>
+                            <option value="Sudah Dilunasi 100% dari Kas">Tindakan: Sudah Dilunasi 100% dari Kas</option>
+                            <option value="Dalam Proses Pelunasan Minggu Ini">Tindakan: Dalam Proses Pelunasan Minggu Ini</option>
+                        </select>
+                    </div>
+                    <input type="text" id="ketUtang" placeholder="Jelaskan bukti pelunasan atau hubungan dengan pemasok/pihak lain (contoh: Nota lunas K04)..." class="w-full px-3 py-1.5 text-xs rounded-lg border border-slate-300 bg-white focus:outline-none focus:ring-2 focus:ring-teal">
+                </div>
+
+                <!-- Aspek 3: Pengembalian Modal Pemegang Saham -->
+                <div class="p-3.5 rounded-xl border border-slate-200 bg-slate-50/70 hover:border-teal/50 transition">
+                    <div class="flex flex-col md:flex-row md:items-center justify-between gap-2 mb-2">
+                        <label class="flex items-center gap-2.5 cursor-pointer font-bold text-sm text-navy">
+                            <input type="checkbox" id="chkModal" class="w-4 h-4 accent-teal rounded cursor-pointer">
+                            <span>3. Pengembalian Modal &amp; Pembagian Sisa Hasil Usaha (Dividen)</span>
+                        </label>
+                        <select id="opsiModal" class="px-3 py-1.5 text-xs font-medium rounded-lg border border-slate-300 bg-white focus:ring-2 focus:ring-teal">
+                            <option value="Modal Kembali 100% + Laba (Dividen)">Hasil: Modal Kembali 100% + Laba (Dividen)</option>
+                            <option value="Modal Kembali 100% (Impas / Break-Even)">Hasil: Modal Kembali 100% (Impas / Break-Even)</option>
+                            <option value="Modal Kembali Sebagian (Menanggung Rugi)">Hasil: Modal Kembali Sebagian (Menanggung Rugi)</option>
+                        </select>
+                    </div>
+                    <input type="text" id="ketModal" placeholder="Jelaskan mekanisme pembagian uang kas kepada seluruh pemegang saham di kelas..." class="w-full px-3 py-1.5 text-xs rounded-lg border border-slate-300 bg-white focus:outline-none focus:ring-2 focus:ring-teal">
+                </div>
+            </div>
+        </section>
+
+        <!-- 4. MODUL 3: REFLEKSI PEMBELAJARAN BERMAKNA & EVALUASI DIRI (IPS & KARAKTER) -->
+        <section class="card-section bg-white rounded-2xl p-5 shadow-sm border border-slate-200">
+            <div class="flex flex-wrap items-center justify-between gap-2 mb-4 border-b border-slate-100 pb-2.5">
+                <h2 class="text-sm font-bold uppercase tracking-wider text-navy flex items-center gap-2">
+                    <span class="w-6 h-6 rounded-md bg-amber-500 text-white text-xs flex items-center justify-center font-bold">3</span>
+                    Refleksi Pembelajaran Bermakna &amp; Evaluasi Diri (IPS &amp; Karakter)
+                </h2>
+                <span class="text-xs text-slate-500 italic">Tulis dengan bahasamu sendiri sesuai pengalaman nyata</span>
+            </div>
+
+            <div class="space-y-4">
+                <!-- Pertanyaan 1 -->
+                <div>
+                    <label for="refleksiKonsep" class="block text-xs font-bold text-navy mb-1">
+                        A. Perubahan Pemahaman Konsep Ekonomi (IPS) dari Minggu Ke-1 hingga Minggu Ke-4
+                    </label>
+                    <p class="text-[11px] text-slate-500 mb-1.5">
+                        Konsep IPS apa (<em>produksi, distribusi, konsumsi, pembentukan harga, laba/rugi, atau likuidasi</em>) yang paling kamu pahami setelah menjalankan SC? Berikan contoh nyatanya!
+                    </p>
+                    <textarea id="refleksiKonsep" rows="2" placeholder="Contoh: Awalnya saya mengira semua uang hasil jualan adalah keuntungan. Setelah menghitung laporan akhir, saya paham bahwa laba diperoleh setelah pendapatan dikurangi modal dan biaya produksi..." class="w-full px-3 py-2 text-xs rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-teal focus:border-teal transition"></textarea>
+                </div>
+
+                <!-- Pertanyaan 2 -->
+                <div>
+                    <label for="refleksiPeran" class="block text-xs font-bold text-navy mb-1">
+                        B. Evaluasi Peran &amp; Koordinasi dalam Struktur Organisasi SC (Pembagian Kerja / Division of Labor)
+                    </label>
+                    <p class="text-[11px] text-slate-500 mb-1.5">
+                        Bagaimana kamu menjalankan tanggung jawab pada jabatanmu selama 4 minggu ini, dan bagaimana koordinasimu dengan divisi lain?
+                    </p>
+                    <textarea id="refleksiPeran" rows="2" placeholder="Contoh: Sebagai bagian Quality Control, saya memastikan kemasan produk rapi sebelum dijual. Saat stok kemasan menipis di minggu ke-3, saya berkoordinasi dengan bagian Purchasing..." class="w-full px-3 py-2 text-xs rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-teal focus:border-teal transition"></textarea>
+                </div>
+
+                <!-- Pertanyaan 3 -->
+                <div>
+                    <label for="refleksiMasaDepan" class="block text-xs font-bold text-navy mb-1">
+                        C. Keputusan Bisnis untuk Masa Depan
+                    </label>
+                    <p class="text-[11px] text-slate-500 mb-1.5">
+                        Jika kamu menjalankan usaha lagi di masa depan, keputusan atau strategi apa yang akan kamu ulangi atau ubah? Apa pertimbangannya?
+                    </p>
+                    <textarea id="refleksiMasaDepan" rows="2" placeholder="Contoh: Saya akan tetap mempertahankan promosi pre-order karena terbukti mengurangi risiko sisa produk, namun saya akan mencatat setiap pengeluaran kecil sejak hari pertama..." class="w-full px-3 py-2 text-xs rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-teal focus:border-teal transition"></textarea>
+                </div>
+            </div>
+
+            <!-- Area Tanda Tangan (Hanya Muncul Saat Cetak PDF / Print) -->
+            <div class="print-signature hidden">
+                <div class="text-center">
+                    <div>Dibuat oleh Murid,</div>
+                    <div class="h-10"></div>
+                    <div class="font-bold" id="printNamaMurid">( ________________________ )</div>
+                </div>
+                <div class="text-center">
+                    <div>Diperiksa oleh Guru IPS / Pendamping,</div>
+                    <div class="h-10"></div>
+                    <div class="font-bold">( ________________________ )</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer Informasi Web -->
+        <footer class="no-print text-center text-xs text-slate-400 pt-2 pb-6">
+            Worksheet Interaktif Student Company • SMP Pembangunan Jaya TA 2026/2027 • Data tersimpan otomatis di browser perangkatmu.
+        </footer>
+
+    </main>
+
+    <script>
+        // Kunci Penyimpanan LocalStorage
+        const STORAGE_KEY = 'sc_worksheet_m4_smp_pj_2026';
+
+        // Referensi Elemen Input
+        const textFields = [
+            'namaMurid', 'kelasMurid', 'namaPerusahaan', 'peranDivisi', 'tanggalEvaluasi',
+            'opsiBarang', 'ketBarang', 'opsiUtang', 'ketUtang', 'opsiModal', 'ketModal',
+            'refleksiKonsep', 'refleksiPeran', 'refleksiMasaDepan'
+        ];
+        const checkboxFields = ['chkBarang', 'chkUtang', 'chkModal'];
+        const currencyFields = ['modalAwal', 'totalPendapatan', 'totalBiaya', 'totalUtang'];
+
+        let financeChart = null;
+
+        // Format Angka ke Ribuan Indonesia (tanpa "Rp")
+        function formatNumberID(num) {
+            if (isNaN(num) || num === 0) return '0';
+            return Math.round(num).toLocaleString('id-ID');
+        }
+
+        // Format Lengkap Rupiah
+        function formatRupiah(num) {
+            const isNegative = num < 0;
+            const absVal = Math.abs(Math.round(num));
+            return (isNegative ? '-Rp ' : 'Rp ') + absVal.toLocaleString('id-ID');
+        }
+
+        // Parse String Terformat Ribuan Menjadi Integer
+        function parseCurrency(str) {
+            if (!str) return 0;
+            const cleaned = str.toString().replace(/[^0-9]/g, '');
+            return parseInt(cleaned, 10) || 0;
+        }
+
+        // Inisialisasi Grafik Chart.js
+        function initChart() {
+            const ctx = document.getElementById('financeChart').getContext('2d');
+            financeChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Pendapatan', 'Total Biaya', 'Laba / Rugi'],
+                    datasets: [{
+                        label: 'Jumlah (Rp)',
+                        data: [0, 0, 0],
+                        backgroundColor: [
+                            'rgba(13, 148, 136, 0.85)',  // Teal
+                            'rgba(225, 29, 72, 0.8)',    // Rose
+                            'rgba(27, 54, 93, 0.85)'     // Navy
+                        ],
+                        borderRadius: 6,
+                        barThickness: 36
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return formatRupiah(context.raw);
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                font: { size: 10 },
+                                callback: function(value) {
+                                    if (Math.abs(value) >= 1000000) return 'Rp ' + (value / 1000000) + 'jt';
+                                    if (Math.abs(value) >= 1000) return 'Rp ' + (value / 1000) + 'rb';
+                                    return 'Rp ' + value;
+                                }
+                            },
+                            grid: { color: '#f1f5f9' }
+                        },
+                        x: {
+                            ticks: { font: { size: 11, weight: '600' } },
+                            grid: { display: false }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Kalkulasi Laporan Keuangan Real-Time
+        function calculateFinance() {
+            const modalAwal = parseCurrency(document.getElementById('modalAwal').value);
+            const pendapatan = parseCurrency(document.getElementById('totalPendapatan').value);
+            const biaya = parseCurrency(document.getElementById('totalBiaya').value);
+            const utang = parseCurrency(document.getElementById('totalUtang').value);
+            const anggota = Math.max(1, parseInt(document.getElementById('jumlahAnggota').value, 10) || 1);
+
+            // 1. Laba / Rugi Bersih = Pendapatan - Biaya
+            const labaRugi = pendapatan - biaya;
+
+            // 2. Persentase Margin Laba/Rugi
+            let margin = 0;
+            if (pendapatan > 0) {
+                margin = (labaRugi / pendapatan) * 100;
+            }
+
+            // 3. Dana Bersih Likuidasi = Modal Awal + Laba/Rugi - Utang
+            const danaLikuidasi = modalAwal + labaRugi - utang;
+
+            // 4. Estimasi Pengembalian per Anggota
+            const perAnggota = danaLikuidasi / anggota;
+
+            // Update Tampilan Angka
+            const elLabaRugi = document.getElementById('hasilLabaRugi');
+            const elMargin = document.getElementById('hasilMargin');
+            const elLikuidasi = document.getElementById('hasilDanaLikuidasi');
+            const elPerAnggota = document.getElementById('hasilPerAnggota');
+            const elBadge = document.getElementById('statusBadge');
+
+            elLabaRugi.textContent = formatRupiah(labaRugi);
+            elMargin.textContent = margin.toFixed(1) + '%';
+            elLikuidasi.textContent = formatRupiah(danaLikuidasi);
+            elPerAnggota.textContent = formatRupiah(perAnggota);
+
+            // Update Warna & Status Badge
+            if (labaRugi > 0) {
+                elLabaRugi.className = 'text-base md:text-lg font-extrabold text-emerald-600 mt-0.5';
+                elBadge.className = 'px-2.5 py-0.5 rounded-full text-xs font-extrabold bg-emerald-100 text-emerald-800 border border-emerald-300';
+                elBadge.textContent = 'STATUS: LABA';
+            } else if (labaRugi < 0) {
+                elLabaRugi.className = 'text-base md:text-lg font-extrabold text-rose-600 mt-0.5';
+                elBadge.className = 'px-2.5 py-0.5 rounded-full text-xs font-extrabold bg-rose-100 text-rose-800 border border-rose-300';
+                elBadge.textContent = 'STATUS: RUGI';
+            } else {
+                elLabaRugi.className = 'text-base md:text-lg font-extrabold text-slate-800 mt-0.5';
+                elBadge.className = 'px-2.5 py-0.5 rounded-full text-xs font-extrabold bg-slate-200 text-slate-700';
+                elBadge.textContent = 'STATUS: IMPAS';
+            }
+
+            // Update Grafik
+            if (financeChart) {
+                financeChart.data.datasets[0].data = [pendapatan, biaya, labaRugi];
+                financeChart.data.datasets[0].backgroundColor[2] = labaRugi >= 0 ? 'rgba(16, 185, 129, 0.85)' : 'rgba(225, 29, 72, 0.85)';
+                financeChart.update();
+            }
+
+            // Update Nama Murid di Area Tanda Tangan Cetak
+            const nama = document.getElementById('namaMurid').value.trim();
+            document.getElementById('printNamaMurid').textContent = nama ? `( ${nama} )` : '( ________________________ )';
+        }
+
+        // Simpan Data ke LocalStorage
+        function saveToLocalStorage() {
+            const data = {};
+            textFields.forEach(id => {
+                const el = document.getElementById(id);
+                if (el) data[id] = el.value;
+            });
+            checkboxFields.forEach(id => {
+                const el = document.getElementById(id);
+                if (el) data[id] = el.checked;
+            });
+            currencyFields.forEach(id => {
+                const el = document.getElementById(id);
+                if (el) data[id] = el.value;
+            });
+            data['jumlahAnggota'] = document.getElementById('jumlahAnggota').value;
+
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+
+            const statusEl = document.getElementById('save-status');
+            statusEl.innerHTML = '<i class="fa-solid fa-cloud-check text-teal"></i> Tersimpan otomatis';
+        }
+
+        // Muat Data dari LocalStorage
+        function loadFromLocalStorage() {
+            const raw = localStorage.getItem(STORAGE_KEY);
+            if (!raw) {
+                // Set default tanggal hari ini jika baru pertama kali buka
+                const today = new Date().toISOString().split('T')[0];
+                document.getElementById('tanggalEvaluasi').value = today;
+                return;
+            }
+
+            try {
+                const data = JSON.parse(raw);
+                textFields.forEach(id => {
+                    const el = document.getElementById(id);
+                    if (el && data[id] !== undefined) el.value = data[id];
+                });
+                checkboxFields.forEach(id => {
+                    const el = document.getElementById(id);
+                    if (el && data[id] !== undefined) el.checked = data[id];
+                });
+                currencyFields.forEach(id => {
+                    const el = document.getElementById(id);
+                    if (el && data[id] !== undefined) el.value = data[id];
+                });
+                if (data['jumlahAnggota']) {
+                    document.getElementById('jumlahAnggota').value = data['jumlahAnggota'];
+                }
+            } catch (e) {
+                console.error('Gagal memuat draft:', e);
+            }
+        }
+
+        // Tampilkan Notifikasi Toast
+        function showToast(title, msg, isSuccess = true) {
+            const toast = document.getElementById('toast');
+            const icon = document.getElementById('toast-icon');
+            document.getElementById('toast-title').textContent = title;
+            document.getElementById('toast-msg').textContent = msg;
+
+            icon.className = isSuccess
+                ? 'fa-solid fa-circle-check text-teal-light text-lg'
+                : 'fa-solid fa-circle-info text-amber-400 text-lg';
+
+            toast.classList.remove('translate-y-24', 'opacity-0');
+            setTimeout(() => {
+                toast.classList.add('translate-y-24', 'opacity-0');
+            }, 3000);
+        }
+
+        // Tombol Simpan Manual
+        function saveDraftManual() {
+            saveToLocalStorage();
+            showToast('Draft Tersimpan!', 'Seluruh jawabanmu aman tersimpan di browser.');
+        }
+
+        // Susun Teks Laporan Lengkap untuk Ekspor / Salin
+        function generateTextSummary() {
+            const nama = document.getElementById('namaMurid').value || '-';
+            const kelas = document.getElementById('kelasMurid').value || '-';
+            const perusahaan = document.getElementById('namaPerusahaan').value || '-';
+            const peran = document.getElementById('peranDivisi').value || '-';
+            const tanggal = document.getElementById('tanggalEvaluasi').value || '-';
+
+            const modal = document.getElementById('modalAwal').value || '0';
+            const pendapatan = document.getElementById('totalPendapatan').value || '0';
+            const biaya = document.getElementById('totalBiaya').value || '0';
+            const utang = document.getElementById('totalUtang').value || '0';
+            const anggota = document.getElementById('jumlahAnggota').value || '1';
+
+            const labaRugi = document.getElementById('hasilLabaRugi').textContent;
+            const margin = document.getElementById('hasilMargin').textContent;
+            const likuidasi = document.getElementById('hasilDanaLikuidasi').textContent;
+            const perAnggota = document.getElementById('hasilPerAnggota').textContent;
+            const status = document.getElementById('statusBadge').textContent;
+
+            const stBarang = document.getElementById('chkBarang').checked ? '[SELESAI]' : '[BELUM]';
+            const stUtang = document.getElementById('chkUtang').checked ? '[SELESAI]' : '[BELUM]';
+            const stModal = document.getElementById('chkModal').checked ? '[SELESAI]' : '[BELUM]';
+
+            return `====================================================================
+WORKSHEET EVALUASI & LIKUIDASI STUDENT COMPANY (MINGGU KE-4)
+SMP PEMBANGUNAN JAYA - TAHUN AJARAN 2026/2027
+====================================================================
+
+[IDENTITAS MURID]
+- Nama Murid      : ${nama}
+- Kelas           : ${kelas}
+- Nama Perusahaan : ${perusahaan}
+- Peran / Divisi  : ${peran}
+- Tanggal         : ${tanggal}
+
+[1. LAPORAN AKHIR KEUANGAN & LIKUIDASI (MATEMATIKA)]
+- Modal Awal Usaha              : Rp ${modal}
+- Total Pendapatan (M1-M4)      : Rp ${pendapatan}
+- Total Biaya (M1-M4)           : Rp ${biaya}
+- Utang Belum Dibayar           : Rp ${utang}
+- Jumlah Pemegang Saham/Anggota : ${anggota} orang
+--------------------------------------------------------------------
+- Laba / Rugi Bersih            : ${labaRugi} (${status})
+- Persentase Margin             : ${margin}
+- Dana Bersih Likuidasi         : ${likuidasi}
+- Estimasi Pengembalian/Anggota : ${perAnggota}
+
+[2. CHECKLIST & STRATEGI LIKUIDASI USAHA (IPS)]
+1. Barang & Bahan Tersisa ${stBarang}
+   Pilihan : ${document.getElementById('opsiBarang').value}
+   Catatan : ${document.getElementById('ketBarang').value || '-'}
+
+2. Pelunasan Utang & Kewajiban ${stUtang}
+   Pilihan : ${document.getElementById('opsiUtang').value}
+   Catatan : ${document.getElementById('ketUtang').value || '-'}
+
+3. Pengembalian Modal & Dividen ${stModal}
+   Pilihan : ${document.getElementById('opsiModal').value}
+   Catatan : ${document.getElementById('ketModal').value || '-'}
+
+[3. REFLEKSI PEMBELAJARAN BERMAKNA (IPS & KARAKTER)]
+A. Perubahan Pemahaman Konsep Ekonomi:
+${document.getElementById('refleksiKonsep').value || '-'}
+
+B. Evaluasi Peran & Koordinasi Struktur SC:
+${document.getElementById('refleksiPeran').value || '-'}
+
+C. Keputusan Bisnis untuk Masa Depan:
+${document.getElementById('refleksiMasaDepan').value || '-'}
+====================================================================`;
+        }
+
+        // Salin ke Clipboard (Kompatibel iFrame dengan execCommand)
+        function copySummaryToClipboard() {
+            const summaryText = generateTextSummary();
+            const tempTextArea = document.createElement('textarea');
+            tempTextArea.value = summaryText;
+            tempTextArea.style.position = 'fixed';
+            tempTextArea.style.left = '-9999px';
+            document.body.appendChild(tempTextArea);
+            tempTextArea.select();
+            try {
+                document.execCommand('copy');
+                showToast('Laporan Disalin!', 'Teks ringkasan siap ditempel (Paste) ke Google Classroom / WA Guru.');
+            } catch (err) {
+                showToast('Gagal Menyalin', 'Silakan gunakan tombol Unduh .TXT atau Cetak PDF.', false);
+            }
+            document.body.removeChild(tempTextArea);
+        }
+
+        // Unduh Laporan sebagai File .TXT
+        function downloadTxtReport() {
+            const summaryText = generateTextSummary();
+            const nama = (document.getElementById('namaMurid').value || 'Murid').replace(/\s+/g, '_');
+            const kelas = document.getElementById('kelasMurid').value || '8';
+            const filename = `Evaluasi_Likuidasi_SC_M4_${kelas}_${nama}.txt`;
+
+            const blob = new Blob([summaryText], { type: 'text/plain;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+
+            showToast('File Diunduh!', `File ${filename} berhasil diunduh.`);
+        }
+
+        // Modal Reset
+        function openResetModal() {
+            document.getElementById('reset-modal').classList.remove('hidden');
+            document.getElementById('reset-modal').classList.add('flex');
+        }
+
+        function closeResetModal() {
+            document.getElementById('reset-modal').classList.add('hidden');
+            document.getElementById('reset-modal').classList.remove('flex');
+        }
+
+        function confirmReset() {
+            localStorage.removeItem(STORAGE_KEY);
+            textFields.forEach(id => {
+                const el = document.getElementById(id);
+                if (el && el.tagName === 'SELECT') el.selectedIndex = 0;
+                else if (el) el.value = '';
+            });
+            checkboxFields.forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.checked = false;
+            });
+            currencyFields.forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.value = '';
+            });
+            document.getElementById('jumlahAnggota').value = 10;
+            document.getElementById('tanggalEvaluasi').value = new Date().toISOString().split('T')[0];
+
+            calculateFinance();
+            closeResetModal();
+            showToast('Form Direset', 'Semua isian telah dikosongkan kembali.');
+        }
+
+        // Event Listeners saat Halaman Dimuat
+        window.addEventListener('DOMContentLoaded', () => {
+            initChart();
+            loadFromLocalStorage();
+
+            // Format otomatis input Rupiah saat diketik
+            currencyFields.forEach(id => {
+                const input = document.getElementById(id);
+                input.addEventListener('input', (e) => {
+                    const rawVal = parseCurrency(e.target.value);
+                    e.target.value = rawVal === 0 ? '' : formatNumberID(rawVal);
+                    calculateFinance();
+                    saveToLocalStorage();
+                });
+            });
+
+            // Listener untuk jumlah anggota
+            document.getElementById('jumlahAnggota').addEventListener('input', () => {
+                calculateFinance();
+                saveToLocalStorage();
+            });
+
+            // Listener untuk semua teks & dropdown
+            textFields.forEach(id => {
+                const el = document.getElementById(id);
+                if (el) {
+                    el.addEventListener('input', () => {
+                        if (id === 'namaMurid') calculateFinance();
+                        saveToLocalStorage();
+                    });
+                    el.addEventListener('change', saveToLocalStorage);
+                }
+            });
+
+            // Listener untuk semua checkbox
+            checkboxFields.forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.addEventListener('change', saveToLocalStorage);
+            });
+
+            // Hitung awal berdasarkan data tersimpan
+            calculateFinance();
+        });
+    </script>
+</body>
+</html>
